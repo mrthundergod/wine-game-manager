@@ -1,10 +1,12 @@
 #!/bin/bash
 # game-manager.sh — All-in-one Wine sandbox game manager
 # Usage: game-manager
+# Version: 0.1
 
 set -e
 
 # ── Config ────────────────────────────────────────────────────────────────────
+VERSION="0.1"
 WINEPREFIX="$HOME/.sandbox-game"
 LAUNCHERS_DIR="$HOME/.game-launchers"
 DESKTOP_DIR="$HOME/.local/share/applications"
@@ -19,7 +21,7 @@ print_header() {
   clear
   echo ""
   echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-  echo "        🎮  Wine Sandbox Game Manager"
+  echo "        🎮  Wine Sandbox Game Manager     v$VERSION"
   echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
   echo ""
 }
@@ -199,8 +201,15 @@ install_game() {
   echo ""
   read -rp "Paste the full path to the installer .exe: " ORIGINAL_PATH
 
+  # Strip surrounding double quotes
   ORIGINAL_PATH="${ORIGINAL_PATH%\"}"
   ORIGINAL_PATH="${ORIGINAL_PATH#\"}"
+  # Strip surrounding single quotes
+  ORIGINAL_PATH="${ORIGINAL_PATH%\'}"
+  ORIGINAL_PATH="${ORIGINAL_PATH#\'}"
+  # Strip leading/trailing whitespace
+  ORIGINAL_PATH="${ORIGINAL_PATH#"${ORIGINAL_PATH%%[![:space:]]*}"}"
+  ORIGINAL_PATH="${ORIGINAL_PATH%"${ORIGINAL_PATH##*[![:space:]]}"}"
 
   if [[ ! -f "$ORIGINAL_PATH" ]]; then
     echo ""
